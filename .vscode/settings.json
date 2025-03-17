@@ -1,0 +1,6 @@
+{
+  "php-implementor.composerPath": ".",
+  "php-implementor.autoloads": {
+    "Library": "src/"
+  }
+}
