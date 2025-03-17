@@ -6,7 +6,7 @@ use LogicException;
 
 class Student
 {
-    private string|null $id;
+    private int|null $id;
 
     private string $name;
 
@@ -26,7 +26,7 @@ class Student
         $this->classRoom        = $classRoom;
     }
 
-    public function setId(string $id): void
+    public function setId(int $id): void
     {
         if ($this->id !== null) {
             throw new LogicException("ID already exist and cannot by changed.");
@@ -35,7 +35,7 @@ class Student
         $this->id = $id;
     }
 
-    public function getId(): string | null
+    public function getId(): int | null
     {
         return $this->id;
     }

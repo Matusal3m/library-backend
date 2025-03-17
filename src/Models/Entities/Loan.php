@@ -7,7 +7,7 @@ use LogicException;
 
 class Loan
 {
-    private string $id;
+    private int|null $id;
 
     private Student $student;
 
@@ -34,7 +34,7 @@ class Loan
         $this->finishDate = date_create('now')->add(date_interval_create_from_date_string('15 days'));
     }
 
-    public function setId(string $id): void
+    public function setId(int $id): void
     {
         if ($this->id !== null) {
             throw new LogicException("ID already exist and cannot by changed");
@@ -43,7 +43,7 @@ class Loan
         $this->id = $id;
     }
 
-    public function getId(): string | null
+    public function getId(): int | null
     {
         return $this->id;
     }

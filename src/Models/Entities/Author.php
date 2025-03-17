@@ -7,7 +7,7 @@ use LogicException;
 
 class Author
 {
-    private string|null $id = null;
+    private int|null $id = null;
 
     private string $name;
 
@@ -19,7 +19,7 @@ class Author
         $this->books = $books;
     }
 
-    public function setId(string $id): void
+    public function setId(int $id): void
     {
         if ($this->id !== null) {
             throw new LogicException("ID already exist and cannot by changed");
@@ -28,7 +28,7 @@ class Author
         $this->id = $id;
     }
 
-    public function getId(): string | null
+    public function getId(): int | null
     {
         return $this->id;
     }
