@@ -17,13 +17,16 @@ class Book
 
     private Loan|null $loan;
 
-    public function __construct(string $title, Author $author, bool $isAvailable)
+    protected string $SeducCode;
+
+    public function __construct(string $title, Author $author, bool $isAvailable, string $SeducCode)
     {
         $this->validateTitle($title);
 
         $this->title       = $title;
         $this->author      = $author;
         $this->isAvailable = $isAvailable;
+        $this->SeducCode   = $SeducCode;
     }
 
     public function setId(int $id): void
@@ -95,5 +98,15 @@ class Book
         }
 
         $this->loan = null;
+    }
+
+    public function getSeducCode(): string
+    {
+        return $this->SeducCode;
+    }
+
+    public function setSeducCode(string $seducCode): void
+    {
+        $this->SeducCode = $seducCode;
     }
 }
