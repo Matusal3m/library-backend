@@ -4,10 +4,8 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "Library": "src/"
+      "Library\\": "src/"
     }
   },
-  "require": {
-    "guzzlehttp/guzzle": "^7.0"
-  }
+  "require": {}
 }
