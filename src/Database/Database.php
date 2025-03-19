@@ -10,7 +10,7 @@ class Database
 
     public function __construct()
     {
-        $this->connection = new SQLite3('./database.db');
+        $this->connection = new SQLite3(__DIR__ . '/database.db');
     }
 
     public function getConnection(): SQLite3
