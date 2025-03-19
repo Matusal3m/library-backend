@@ -63,7 +63,7 @@ class Database
     /**
      * Executes an SQL query
      *
-     * @return midex - The query result
+     * @return mixed - The query result
      */
     public function query(string $query)
     {
