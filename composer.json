@@ -4,7 +4,8 @@
   "type": "project",
   "autoload": {
     "psr-4": {
-      "Library\\": "src/"
+      "Library\\App\\": "App",
+      "Library\\Database": "Database"
     }
   },
   "require": {}

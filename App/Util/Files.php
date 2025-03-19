@@ -1,5 +1,5 @@
 <?php
-namespace Library\Util;
+namespace Library\App\Util;
 
 class Files
 {

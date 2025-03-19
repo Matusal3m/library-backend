@@ -1,5 +1,5 @@
 <?php
-namespace Library\Models\Entities;
+namespace Library\App\Models\Entities;
 
 use DateTime;
 use Exception;

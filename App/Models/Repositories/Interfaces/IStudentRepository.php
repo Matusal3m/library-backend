@@ -1,5 +1,5 @@
 <?php
-namespace Library\Models\Repositories\Interfaces;
+namespace Library\App\Models\Repositories\Interfaces;
 
 use Library\Models\Entities\Student;
 
