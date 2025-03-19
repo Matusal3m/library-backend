@@ -16,7 +16,7 @@ class BookDAO
     public function save(Book $book): Book
     {
         $title        = $book->getTitle();
-        $author_id    = $book->getAuthor()->getId();
+        $author_id    = $book->getAuthorId();
         $is_available = $book->getIsAvailable();
         $seduc_code   = $book->getSeducCode();
 
@@ -99,7 +99,7 @@ class BookDAO
     {
         $id           = $book->getId();
         $title        = $book->getTitle();
-        $author_id    = $book->getAuthor()->getId();
+        $author_id    = $book->getAuthorId();
         $is_available = $book->getIsAvailable();
         $seduc_code   = $book->getSeducCode();
 

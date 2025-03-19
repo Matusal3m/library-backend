@@ -14,12 +14,9 @@ class BookMapper
 
     public function mapRowToBook(array $row): Book
     {
-
-        $author = $this->authorDAO->getById($row['author_id']);
-
         $book = new Book(
             $row['title'],
-            $author,
+            $row['author_id'],
             $row['is_available'],
             $row['seduc_code'],
         );

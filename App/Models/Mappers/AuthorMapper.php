@@ -13,11 +13,12 @@ class AuthorMapper
 
     public function mapRowToAuthor(array $row): Author
     {
-        $books = $this->bookDao->getAllMappedByAuthorId($row['id']);
+        $author = new Author($row['name']);
 
-        $author = new Author($row['name'], $books);
+        if (isset($row['id'])) {
+            $author->setId($row['id']);
+        }
 
-        $author->setId($row['id']);
         return $author;
     }
 }
