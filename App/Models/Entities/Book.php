@@ -10,18 +10,18 @@ class Book
 
     private string $title;
 
-    private Author $author;
+    private int $author_id;
 
     private bool $isAvailable;
 
     protected string $SeducCode;
 
-    public function __construct(string $title, Author $author, bool $isAvailable, string $SeducCode)
+    public function __construct(string $title, int $author_id, bool $isAvailable, string $SeducCode)
     {
         $this->validateTitle($title);
 
         $this->title       = $title;
-        $this->author      = $author;
+        $this->author_id   = $author_id;
         $this->isAvailable = $isAvailable;
         $this->SeducCode   = $SeducCode;
     }
@@ -52,9 +52,14 @@ class Book
         $this->title = $newTitle;
     }
 
-    public function getAuthor(): Author
+    public function getAuthorId(): int
     {
-        return $this->author;
+        return $this->author_id;
+    }
+
+    public function updateAuthorId(int $author_id): void
+    {
+        $this->author_id = $author_id;
     }
 
     public function setIsAvailable(bool $available): void

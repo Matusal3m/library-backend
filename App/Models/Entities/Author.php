@@ -1,7 +1,6 @@
 <?php
 namespace Library\App\Models\Entities;
 
-use DomainException;
 use Exception;
 use LogicException;
 
@@ -42,31 +41,6 @@ class Author
         }
 
         return $this;
-    }
-
-    public function getBooks(): array
-    {
-        return $this->books;
-    }
-
-    public function addBook(Book $newBook): void
-    {
-        if ($this->bookWasAlreadyAdded($newBook)) {
-            throw new DomainException("Book was already added");
-        }
-
-        $this->books[] = $newBook;
-    }
-
-    private function bookWasAlreadyAdded(Book $newBook): bool
-    {
-        foreach ($this->books as $book) {
-            if ($book->getId() === $newBook->getId()) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
 }
