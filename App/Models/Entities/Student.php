@@ -14,16 +14,18 @@ class Student
 
     private string $classRoom;
 
-    private Loan|null $loan;
+    private bool $hasActiveLoan;
 
     public function __construct(
         string $name,
         int $enrollmentNumber,
         string $classRoom,
+        bool $hasActiveLoan
     ) {
         $this->name             = $name;
         $this->enrollmentNumber = $enrollmentNumber;
         $this->classRoom        = $classRoom;
+        $this->hasActiveLoan    = $hasActiveLoan;
     }
 
     public function setId(int $id): void
@@ -78,32 +80,14 @@ class Student
         $this->classRoom = $classRoom;
     }
 
-    public function getLoan(): Loan
+    public function setHasActiveLoan(bool $hasActiveLoan): void
     {
-        return $this->loan;
+        $this->hasActiveLoan = $hasActiveLoan;
     }
 
-    public function setLoan(Loan $loan): void
+    public function getHasActiveLoan(): bool
     {
-        if ($this->loan) {
-            throw new Exception("Student already has a Loan.");
-        }
-
-        $this->loan = $loan;
-    }
-
-    public function removeLoan(): void
-    {
-        if (! $this->loan) {
-            throw new Exception("Student dont have a Loan");
-        }
-
-        $this->loan = null;
-    }
-
-    public function hasLoan(): bool
-    {
-        return ! ! $this->loan;
+        return $this->hasActiveLoan;
     }
 
 }

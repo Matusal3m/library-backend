@@ -25,7 +25,7 @@ class Loan
             throw new Exception("Book cannot be borrowed");
         }
 
-        if (! $student->hasLoan()) {
+        if ($student->getHasActiveLoan()) {
             throw new Exception("Student has already one book");
         }
 

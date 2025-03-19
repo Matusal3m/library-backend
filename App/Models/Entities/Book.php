@@ -2,7 +2,6 @@
 namespace Library\App\Models\Entities;
 
 use DomainException;
-use Exception;
 use LogicException;
 
 class Book
@@ -14,8 +13,6 @@ class Book
     private Author $author;
 
     private bool $isAvailable;
-
-    private Loan|null $loan;
 
     protected string $SeducCode;
 
@@ -75,29 +72,6 @@ class Book
         if (empty($title)) {
             throw new DomainException("TItle cannot be empty");
         }
-    }
-
-    public function getLoan(): Loan
-    {
-        return $this->loan;
-    }
-
-    public function setLoan(Loan $loan): void
-    {
-        if ($this->loan) {
-            throw new Exception("Book already has a Loan");
-        }
-
-        $this->loan = $loan;
-    }
-
-    public function removeLoan(): void
-    {
-        if (! $this->loan) {
-            throw new Exception("Book dont have a Loan");
-        }
-
-        $this->loan = null;
     }
 
     public function getSeducCode(): string
