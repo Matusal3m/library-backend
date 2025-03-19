@@ -30,13 +30,12 @@ class Files
             $contents .= $fileContent;
         }
 
-        Files::writeOnOutputFile($contents);
         return $contents;
     }
 
-    private static function writeOnOutputFile(string $contents, string $filename = './output.txt')
+    public static function writeFile(string $contents, string $filepath = './output.txt')
     {
-        $newFile = fopen($filename, 'wr+');
+        $newFile = fopen($filepath, 'wr+');
 
         fwrite($newFile, $contents);
 
