@@ -5,8 +5,7 @@ class Files
 {
     public static function getContentFromDir(string $dirPath, array $exceptions = []): string
     {
-        $files = scandir($dirPath);
-        echo $dirPath;
+        $files    = scandir($dirPath);
         $contents = "";
 
         foreach ($files as $file) {
