@@ -11,12 +11,9 @@ class Author
 
     private string $name;
 
-    private array $books;
-
-    public function __construct(string $name, array $books)
+    public function __construct(string $name)
     {
-        $this->name  = $name;
-        $this->books = $books;
+        $this->name = $name;
     }
 
     public function setId(int $id): void
