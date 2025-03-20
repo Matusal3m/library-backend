@@ -1,7 +1,11 @@
 <?php
-namespace Library\public;
-
-// Register the composer autoload
 require __DIR__ . '/../vendor/autoload.php';
 
-require __DIR__ . '../bootstrap/database.php';
+// load api routes
+require __DIR__ . '/../App/Http/Routes/api.php';
+
+use Library\Config\Router;
+
+// handle request
+$path = $_SERVER['REQUEST_URI'];
+Router::dispatch($path);

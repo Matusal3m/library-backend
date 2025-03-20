@@ -7,6 +7,8 @@
       "Library\\App\\": "App",
       "Library\\Database\\": "Database",
       "Library\\bootstrap\\": "bootstrap",
+      "Library\\scripts\\": "scripts",
+      "Library\\Http\\": "Http",
       "Library\\public\\": "public"
     }
   },
