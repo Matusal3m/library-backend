@@ -1,0 +1,15 @@
+services:
+  apache:
+    image: php:8.4-apache
+    container_name: lib-backend
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    build: .
+    develop:
+      watch:
+        - action: sync
+          path: ./
+          target: /var/www/html
