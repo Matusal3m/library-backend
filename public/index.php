@@ -1,4 +1,5 @@
 <?php
+namespace Library\public;
 
 // Register the composer autoload
 require __DIR__ . '/../vendor/autoload.php';

@@ -5,7 +5,9 @@
   "autoload": {
     "psr-4": {
       "Library\\App\\": "App",
-      "Library\\Database": "Database"
+      "Library\\Database\\": "Database",
+      "Library\\bootstrap\\": "bootstrap",
+      "Library\\public\\": "public"
     }
   },
   "require": {}
