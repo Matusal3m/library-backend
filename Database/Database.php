@@ -71,6 +71,15 @@ class Database
     }
 
     /**
+     * Executes a result-less query against a given database
+     * @return bool — TRUE if the query succeeded, FALSE on failure.
+     */
+    public function exec($query): bool
+    {
+        return $this->connection->exec($query);
+    }
+
+    /**
      * Creates a database backup file in the backup directory
      *
      * Generates an SQLite backup file with timestamped filename in the format:

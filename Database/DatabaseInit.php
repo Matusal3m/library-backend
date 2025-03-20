@@ -2,17 +2,14 @@
 namespace Library\Database;
 
 use Exception;
-use Library\Util\Files;
-use SQLite3;
+use Library\App\Util\Files;
 
 class DatabaseInit
 {
-    private SQLite3 $db;
+    private Database $db;
 
-    public function __construct()
+    public function __construct(Database $db)
     {
-        $db = new Database()->getConnection();
-
         $this->db = $db;
     }
 
