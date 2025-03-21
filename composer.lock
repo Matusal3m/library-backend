@@ -4,8 +4,59 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c922032c4c04dd45fc647307ddc8434",
-    "packages": [],
+    "content-hash": "933267b2a52e3cde8b3e13ef2c954ba2",
+    "packages": [
+        {
+            "name": "level-2/dice",
+            "version": "4.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Level-2/Dice.git",
+                "reference": "e04c98d96bcc932a917b2b7e7944887e4839056a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Level-2/Dice/zipball/e04c98d96bcc932a917b2b7e7944887e4839056a",
+                "reference": "e04c98d96bcc932a917b2b7e7944887e4839056a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dice\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Butler",
+                    "email": "tom@r.je"
+                }
+            ],
+            "description": "A minimalist Dependency injection container (DIC) for PHP. Please note: 3.0+ is only compatible with PHP 7.0. The 2.0 branch is compatbile with PHP 5.6.",
+            "homepage": "http://r.je/dice.html",
+            "keywords": [
+                "dependency injection",
+                "dependency injection container",
+                "di",
+                "ioc"
+            ],
+            "support": {
+                "issues": "https://github.com/Level-2/Dice/issues",
+                "source": "https://github.com/Level-2/Dice/tree/4.0.4"
+            },
+            "time": "2022-03-28T21:20:23+00:00"
+        }
+    ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
