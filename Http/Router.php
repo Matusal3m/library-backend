@@ -3,9 +3,6 @@ declare (strict_types = 1);
 
 namespace Http;
 
-use Http\Request;
-use Http\Response;
-
 class Router
 {
     private static array $routes = [];
@@ -55,36 +52,12 @@ class Router
         ];
     }
 
-    private static function normalizePath(string $path): string
+    public static function normalizePath(string $path): string
     {
         $path = trim($path, '/');
         $path = "/{$path}/";
         $path = preg_replace('#[/]{2,}#', '/', $path);
         return $path;
-    }
-
-    public static function dispatch(string $path)
-    {
-        $path   = self::normalizePath($path);
-        $method = strtoupper($_SERVER['REQUEST_METHOD']);
-        foreach (self::$routes as $route) {
-
-            if (
-                ! preg_match("#^{$route['path']}$#", $path) ||
-                $route['method'] !== $method
-            ) {
-                continue;
-            }
-
-            [$class, $function] = $route['controller'];
-
-            // load controller
-            require __DIR__ . '/../' . preg_replace('/\\\\/', '/', $class) . '.php';
-
-            $controllerInstance = new $class;
-
-            $controllerInstance->{$function}(new Request, new Response);
-        }
     }
 
     public static function routes()
