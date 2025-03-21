@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS books (
     author_id TEXT NOT NULL,
     is_available BOOLEAN DEFAULT TRUE,
     seduc_code TEXT NOT NULL,
-    FOREIGN KEY (author_id) REFERENCES author(id)
+    FOREIGN KEY (author_id) REFERENCES authors(id)
 );

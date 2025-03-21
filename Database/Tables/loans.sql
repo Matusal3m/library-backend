@@ -5,6 +5,6 @@ CREATE TABLE IF NOT EXISTS loans (
     started_at INTEGER NOT NULL,
     finish_date INTEGER NOT NULL,
     extended_at INTEGER NOT NULL,
-    FOREIGN KEY (student_id) REFERENCES student(id),
-    FOREIGN KEY (book_id) REFERENCES student(id)
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
 );         

@@ -44,10 +44,11 @@ class Database
         $stmt = $this->connection->prepare($query);
 
         foreach ($toBind as $key => $value) {
-            $stmt->bindValue($key, ':' . $value);
+            $stmt->bindValue(':' . $key, $value);
+
         }
 
-        return $stmt->execute();
+        return $stmt->execute()->fetchArray(SQLITE3_ASSOC);
     }
 
     /**
@@ -67,7 +68,7 @@ class Database
      */
     public function query(string $query)
     {
-        return $this->connection->query($query);
+        return $this->connection->query($query)->fetchArray(SQLITE3_ASSOC);
     }
 
     /**
