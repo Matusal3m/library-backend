@@ -94,7 +94,13 @@ class BooksController extends Controller
 
     public function getById(Request $request, Response $response, array $id): void
     {
+        if (! is_int($id[0])) {
+            $response->json(['error' => 'Invalid id type'], 400);
+            return;
+        }
+
         try {
+
             $book = $this->bookDAO->getById($id[0]);
 
             $response->json([
@@ -122,8 +128,13 @@ class BooksController extends Controller
     public function delete(Request $request, Response $response, array $id): void
     {
         $bookId = (int) $id[0];
-        $book   = $this->bookDAO->getById($bookId);
 
+        if (! is_int($id[0])) {
+            $response->json(['error' => 'Invalid id type'], 400);
+            return;
+        }
+
+        $book = $this->bookDAO->getById($bookId);
         if (! $book) {
             $response->json(['error' => 'Book not found'], 404);
             return;
