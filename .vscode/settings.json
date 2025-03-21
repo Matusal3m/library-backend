@@ -1,6 +1,11 @@
 {
   "php-implementor.composerPath": ".",
   "php-implementor.autoloads": {
-    "Library": "src/"
+    "App\\": "App/",
+    "Database\\": "Database/",
+    "\bootstrap\\": "bootstrap/",
+    "scripts\\": "scripts/",
+    "Http\\": "Http/",
+    "public\\": "public"
   }
 }

@@ -1,7 +1,7 @@
 <?php
 declare (strict_types = 1);
 
-namespace Library\Config;
+namespace Library\Http;
 
 use Library\Http\Request;
 use Library\Http\Response;
@@ -79,7 +79,7 @@ class Router
             [$class, $function] = $route['controller'];
 
             // load controller
-            require __DIR__ . '/../App/Http/Controllers/' . $class . '.php';
+            require __DIR__ . '/../' . preg_replace('/\\\\/', '/', $class) . '.php';
 
             $controllerInstance = new $class;
 

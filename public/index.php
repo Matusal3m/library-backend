@@ -1,10 +1,11 @@
 <?php
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // load api routes
-require __DIR__ . '/../App/Http/Routes/api.php';
+require __DIR__ . '/../App/Routes/api.php';
 
-use Library\Config\Router;
+use Library\Http\Router;
 
 // handle request
 $path = $_SERVER['REQUEST_URI'];
