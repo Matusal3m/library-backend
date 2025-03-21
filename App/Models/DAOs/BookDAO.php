@@ -45,18 +45,7 @@ class BookDAO
 
         $bookRow = $this->db->prepareAndExec($query, $binds);
 
-        $book = $this->bookMapper->mapRowToBook($bookRow);
-        return $book;
-    }
-
-    public function getLoanById(int $loan_id): ?Book
-    {
-        $query = 'SELECT * FROM books WHERE loan_id = :loan_id';
-        $binds = ['loan_id' => $loan_id];
-
-        $bookRow = $this->db->prepareAndExec($query, $binds);
-
-        $book = $this->bookMapper->mapRowToBook($bookRow);
+        $book = $this->bookMapper->mapRowToBook($bookRow[0]);
         return $book;
     }
 

@@ -39,16 +39,22 @@ class Database
      *
      */
 
-    public function prepareAndExec(string $query, array $toBind)
+    public function prepareAndExec(string $query, array $toBind): array
     {
-        $stmt = $this->connection->prepare($query);
+        $stmt    = $this->connection->prepare($query);
+        $results = [];
 
         foreach ($toBind as $key => $value) {
             $stmt->bindValue(':' . $key, $value);
-
         }
 
-        return $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+        $rows = $stmt->execute();
+
+        while ($row = $rows->fetchArray(SQLITE3_ASSOC)) {
+            $results[] = $row;
+        }
+
+        return $results;
     }
 
     /**
@@ -66,9 +72,16 @@ class Database
      *
      * @return mixed - The query result
      */
-    public function query(string $query)
+    public function query(string $query): array
     {
-        return $this->connection->query($query)->fetchArray(SQLITE3_ASSOC);
+        $result = [];
+        $rows   = $this->connection->query($query);
+
+        while ($row = $rows->fetchArray(SQLITE3_ASSOC)) {
+            $result[] = $row;
+        }
+
+        return $result;
     }
 
     /**
