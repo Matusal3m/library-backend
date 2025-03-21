@@ -7,9 +7,10 @@ use Database\Database;
 
 class LoanDAO
 {
-    public function __construct(private Database $db)
+    public function __construct(private Database $db, private LoanMapper $loanMapper)
     {
-        $this->db = $db;
+        $this->db         = $db;
+        $this->loanMapper = $loanMapper;
     }
 
     public function save(Loan $loan): Loan
@@ -40,7 +41,7 @@ class LoanDAO
 
         $loanRow = $this->db->prepareAndExec($query, $binds);
 
-        $loan = LoanMapper::mapRowToLoan($loanRow);
+        $loan = $this->loanMapper->mapRowToLoan($loanRow);
         return $loan;
     }
 
@@ -56,7 +57,7 @@ class LoanDAO
     public function getAllMapped(): array
     {
         return array_map(
-            fn($row) => LoanMapper::mapRowToLoan($row),
+            fn($row) => $this->loanMapper->mapRowToLoan($row),
             $this->getAllRaw()
         );
     }

@@ -7,9 +7,12 @@ use Database\Database;
 
 class StudentDAO
 {
-    public function __construct(private Database $db)
-    {
-        $this->db = $db;
+    public function __construct(
+        private Database $db,
+        private StudentMapper $studentMapper
+    ) {
+        $this->db            = $db;
+        $this->studentMapper = $studentMapper;
     }
 
     public function save(Student $student): Student
@@ -42,22 +45,11 @@ class StudentDAO
 
         $studentRow = $this->db->prepareAndExec($query, $binds);
 
-        $student = StudentMapper::mapRowToStudent($studentRow);
+        $student = $this->studentMapper->mapRowToStudent($studentRow);
         return $student;
     }
 
-    public function getByLoanId(int $loan_id): ?Student
-    {
-        $query = 'SELECT * FROM students WHERE loan_id = :loan_id';
-        $binds = ['loan_id' => $loan_id];
-
-        $studentRow = $this->db->prepareAndExec($query, $binds);
-
-        $student = StudentMapper::mapRowToStudent($studentRow);
-        return $student;
-    }
-
-    public function getAllRaw(): mixed
+    public function getAllRaw(): array
     {
         $query = 'SELECT * FROM students';
 
@@ -69,7 +61,7 @@ class StudentDAO
     public function getAllMapped(): mixed
     {
         return array_map(
-            fn($row) => StudentMapper::mapRowToStudent($row),
+            fn($row) => $this->studentMapper->mapRowToStudent($row),
             $this->getAllRaw()
         );
     }
@@ -80,13 +72,13 @@ class StudentDAO
         $name              = $student->getName();
         $class_room        = $student->getClassRoom();
         $enrollment_number = $student->getEnrollmentNumber();
-        $loan_id           = $student->getLoan()->getId();
+        $has_active_loan   = $student->getHasActiveLoan();
 
         $query = 'UPDATE students SET
             name = :name,
             enrollment_number = :enrollment_number,
             class_room = :class_room,
-            loan_id = :loan_id
+            has_active_loan = :has_active_loan
             WHERE id = :id';
 
         $binds = [
@@ -94,7 +86,7 @@ class StudentDAO
             "name"              => $name,
             "class_room"        => $class_room,
             "enrollment_number" => $enrollment_number,
-            "loan_id"           => $loan_id ?? null,
+            "has_active_loan"   => $has_active_loan,
         ];
 
         return $this->db->prepareAndExec($query, $binds);

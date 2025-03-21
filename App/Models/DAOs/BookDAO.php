@@ -60,7 +60,7 @@ class BookDAO
         return $book;
     }
 
-    public function getAllRaw(): array
+    public function getAllRaw(): mixed
     {
         $query = 'SELECT * FROM books';
 
