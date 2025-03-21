@@ -69,7 +69,7 @@ class Book
 
     public function getIsAvailable(): bool
     {
-        return $this->isAvailable;
+        return boolval($this->isAvailable);
     }
 
     private function validateTitle(string $title): void

@@ -3,7 +3,8 @@ namespace App\Controllers;
 
 use App\Models\DAOs\AuthorDAO;
 use App\Models\DAOs\BookDAO;
-use App\Models\Entities\Book;
+use App\Models\Mappers\BookMapper;
+use Exception;
 use Http\Request;
 use Http\Response;
 
@@ -12,10 +13,12 @@ class BooksController extends Controller
 
     public function __construct(
         private BookDAO $bookDAO,
-        private AuthorDAO $authorDAO
+        private AuthorDAO $authorDAO,
+        private BookMapper $bookMapper
     ) {
-        $this->bookDAO   = $bookDAO;
-        $this->authorDAO = $authorDAO;
+        $this->bookDAO    = $bookDAO;
+        $this->authorDAO  = $authorDAO;
+        $this->bookMapper = $bookMapper;
     }
 
     public function create(Request $request, Response $response): void
@@ -33,12 +36,7 @@ class BooksController extends Controller
         }
 
         try {
-            $book = new Book(
-                $data['title'],
-                (int) $data['author_id'],
-                $data['is_available'] ?? true,
-                $data['seduc_code']
-            );
+            $book = $this->bookMapper->mapRowToBook($data);
 
             $savedBook = $this->bookDAO->save($book);
 
@@ -50,7 +48,7 @@ class BooksController extends Controller
                 'is_available' => $savedBook->getIsAvailable(),
             ], 201);
 
-        } catch (\DomainException $e) {
+        } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], 400);
         }
     }
@@ -96,22 +94,29 @@ class BooksController extends Controller
 
     public function getById(Request $request, Response $response, array $id): void
     {
-        $book = $this->bookDAO->getById($id[0]);
+        try {
+            $book = $this->bookDAO->getById($id[0]);
 
-        $response->json([
-            'title'        => $book->getTitle(),
-            'author_id'    => $book->getAuthorId(),
-            'is_available' => $book->getIsAvailable(),
-            'seduc_code'   => $book->getSeducCode(),
-        ]);
-
+            $response->json([
+                'title'        => $book->getTitle(),
+                'author_id'    => $book->getAuthorId(),
+                'is_available' => $book->getIsAvailable(),
+                'seduc_code'   => $book->getSeducCode(),
+            ]);
+        } catch (Exception $e) {
+            $response->json(['error' => $e->getMessage()], 404);
+        }
     }
 
     public function getAll(Request $request, Response $response): void
     {
-        $data = $this->bookDAO->getAllRaw();
+        try {
+            $data = $this->bookDAO->getAllRaw();
 
-        $response->json($data);
+            $response->json($data);
+        } catch (Exception $e) {
+            $response->json(['error' => $e->getMessage()], 500);
+        }
     }
 
     public function delete(Request $request, Response $response, array $id): void
