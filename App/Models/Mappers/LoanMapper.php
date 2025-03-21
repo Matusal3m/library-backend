@@ -1,9 +1,9 @@
 <?php
-namespace Library\App\Models\Mappers;
+namespace App\Models\Mappers;
 
-use Library\App\Models\DAOs\BookDAO;
-use Library\App\Models\DAOs\StudentDAO;
-use Library\App\Models\Entities\Loan;
+use App\Models\DAOs\BookDAO;
+use App\Models\DAOs\StudentDAO;
+use App\Models\Entities\Loan;
 
 class LoanMapper
 {

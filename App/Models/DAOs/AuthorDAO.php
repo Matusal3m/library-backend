@@ -1,9 +1,9 @@
 <?php
-namespace Library\App\Models\DAOs;
+namespace App\Models\DAOs;
 
-use Library\App\Models\Entities\Author;
-use Library\App\Models\Mappers\AuthorMapper;
-use Library\Database\Database;
+use App\Models\Entities\Author;
+use App\Models\Mappers\AuthorMapper;
+use Database\Database;
 
 class AuthorDAO
 {

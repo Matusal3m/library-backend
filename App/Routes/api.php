@@ -1,6 +1,6 @@
 <?php
 
-use Library\App\Controllers\BooksController;
-use Library\Http\Router;
+use App\Controllers\BooksController;
+use Http\Router;
 
 Router::get('/books', [BooksController::class, 'create']);

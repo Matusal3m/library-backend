@@ -1,8 +1,8 @@
 <?php
-namespace Library\App\Models\Mappers;
+namespace App\Models\Mappers;
 
-use Library\App\Models\DAOs\BookDAO;
-use Library\App\Models\Entities\Author;
+use App\Models\DAOs\BookDAO;
+use App\Models\Entities\Author;
 
 class AuthorMapper
 {

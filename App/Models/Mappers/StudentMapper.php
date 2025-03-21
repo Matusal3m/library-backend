@@ -1,7 +1,7 @@
 <?php
-namespace Library\App\Models\Mappers;
+namespace App\Models\Mappers;
 
-use Library\App\Models\Entities\Student;
+use App\Models\Entities\Student;
 
 class StudentMapper
 {

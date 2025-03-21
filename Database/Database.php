@@ -1,5 +1,5 @@
 <?php
-namespace Library\Database;
+namespace Database;
 
 use DateTime;
 use Exception;

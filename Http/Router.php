@@ -1,10 +1,10 @@
 <?php
 declare (strict_types = 1);
 
-namespace Library\Http;
+namespace Http;
 
-use Library\Http\Request;
-use Library\Http\Response;
+use Http\Request;
+use Http\Response;
 
 class Router
 {

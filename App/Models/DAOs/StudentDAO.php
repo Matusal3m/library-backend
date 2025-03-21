@@ -1,9 +1,9 @@
 <?php
-namespace Library\App\Models\DAOs;
+namespace App\Models\DAOs;
 
-use Library\App\Models\Entities\Student;
-use Library\App\Models\Mappers\StudentMapper;
-use Library\Database\Database;
+use App\Models\Entities\Student;
+use App\Models\Mappers\StudentMapper;
+use Database\Database;
 
 class StudentDAO
 {

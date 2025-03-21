@@ -1,8 +1,8 @@
 <?php
-namespace Library\Database;
+namespace Database;
 
+use App\Util\Files;
 use Exception;
-use Library\App\Util\Files;
 
 class DatabaseInit
 {

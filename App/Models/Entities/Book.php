@@ -1,5 +1,5 @@
 <?php
-namespace Library\App\Models\Entities;
+namespace App\Models\Entities;
 
 use DomainException;
 use LogicException;
