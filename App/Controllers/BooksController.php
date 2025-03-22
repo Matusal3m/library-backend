@@ -30,13 +30,13 @@ class BooksController extends Controller
             return;
         }
 
-        if (! $this->authorDAO->getById((int) $data['author_id'])) {
+        if (! $this->authorDAO->getById($data['author_id'])) {
             $response->json(['error' => 'Author not found'], 404);
             return;
         }
 
         try {
-            $book = $this->bookMapper->mapRowToBook($data);
+            $book = $this->bookMapper->mapArrayToBook($data);
 
             $savedBook = $this->bookDAO->save($book);
 
@@ -55,8 +55,13 @@ class BooksController extends Controller
 
     public function update(Request $request, Response $response, array $id): void
     {
-        $bookId = (int) $id[0];
+        $bookId = $id[0];
         $data   = $request->body();
+
+        if (! is_int($bookId)) {
+            $response->json(['error' => 'Id must be an int'], 400);
+            return;
+        }
 
         $book = $this->bookDAO->getById($bookId);
         if (! $book) {
@@ -69,11 +74,17 @@ class BooksController extends Controller
         }
 
         if (isset($data['author_id'])) {
-            if (! $this->authorDAO->getById((int) $data['author_id'])) {
+
+            if (! is_int($data['author_id'])) {
+                $response->json(['error' => 'Author Id must be an int'], 400);
+                return;
+            }
+
+            if (! $this->authorDAO->getById($data['author_id'])) {
                 $response->json(['error' => 'Author not found'], 404);
                 return;
             }
-            $book->updateAuthorId((int) $data['author_id']);
+            $book->updateAuthorId($data['author_id']);
         }
 
         if (isset($data['seduc_code'])) {
@@ -87,21 +98,22 @@ class BooksController extends Controller
         try {
             $this->bookDAO->update($book);
             $response->json(['message' => 'Book updated']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], 400);
         }
     }
 
     public function getById(Request $request, Response $response, array $id): void
     {
+        $bookId = $id[0];
         if (! is_int($id[0])) {
-            $response->json(['error' => 'Invalid id type'], 400);
+            $response->json(['error' => 'Id must be an int'], 400);
             return;
         }
 
         try {
 
-            $book = $this->bookDAO->getById($id[0]);
+            $book = $this->bookDAO->getById($bookId);
 
             $response->json([
                 'title'        => $book->getTitle(),
@@ -127,10 +139,10 @@ class BooksController extends Controller
 
     public function delete(Request $request, Response $response, array $id): void
     {
-        $bookId = (int) $id[0];
+        $bookId = $id[0];
 
-        if (! is_int($id[0])) {
-            $response->json(['error' => 'Invalid id type'], 400);
+        if (! is_int($bookId)) {
+            $response->json(['error' => 'Id must be an int'], 400);
             return;
         }
 
