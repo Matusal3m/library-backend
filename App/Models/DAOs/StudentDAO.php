@@ -45,6 +45,10 @@ class StudentDAO
 
         $studentRow = $this->db->prepareAndFetch($query, $binds);
 
+        if (! $studentRow) {
+            return null;
+        }
+
         $student = $this->studentMapper->mapArrayToStudent($studentRow);
         return $student;
     }
@@ -66,7 +70,7 @@ class StudentDAO
         );
     }
 
-    public function update(Student $student): Student
+    public function update(Student $student): void
     {
         $id                = $student->getId();
         $name              = $student->getName();
@@ -89,7 +93,7 @@ class StudentDAO
             "has_active_loan"   => $has_active_loan,
         ];
 
-        return $this->db->prepareAndExecute($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 
     public function delete(int $id): void

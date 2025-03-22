@@ -26,12 +26,16 @@ class AuthorDAO
         return $author;
     }
 
-    public function getById(int $id): Author | bool
+    public function getById(int $id): ?Author
     {
         $query = 'SELECT * FROM authors WHERE id = :id';
         $binds = ['id' => $id];
 
         $authorRow = $this->db->prepareAndFetch($query, $binds);
+
+        if (! $authorRow) {
+            return null;
+        }
 
         $author = $this->authorMapper->mapArrayToAuthor($authorRow[0]);
         return $author;

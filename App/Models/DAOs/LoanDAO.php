@@ -41,6 +41,10 @@ class LoanDAO
 
         $loanRow = $this->db->prepareAndFetch($query, $binds);
 
+        if (! $loanRow) {
+            return null;
+        }
+
         $loan = $this->loanMapper->mapArrayToLoan($loanRow);
         return $loan;
     }

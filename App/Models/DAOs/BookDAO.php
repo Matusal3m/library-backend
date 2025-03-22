@@ -4,7 +4,6 @@ namespace App\Models\DAOs;
 use App\Models\Entities\Book;
 use App\Models\Mappers\BookMapper;
 use Database\Database;
-use ErrorException;
 
 class BookDAO
 {
@@ -47,7 +46,7 @@ class BookDAO
         $bookRow = $this->db->prepareAndFetch($query, $binds);
 
         if (! $bookRow) {
-            throw new ErrorException("Book not found");
+            return null;
         }
 
         $book = $this->bookMapper->mapArrayToBook($bookRow[0]);
