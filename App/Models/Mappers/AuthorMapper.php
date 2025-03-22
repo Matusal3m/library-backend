@@ -5,7 +5,7 @@ use App\Models\Entities\Author;
 
 class AuthorMapper
 {
-    public function mapRowToAuthor(array $row): Author
+    public function mapArrayToAuthor(array $row): Author
     {
         $author = new Author($row['name']);
 

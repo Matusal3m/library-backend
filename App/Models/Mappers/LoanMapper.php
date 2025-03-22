@@ -13,7 +13,7 @@ class LoanMapper
         $this->bookDAO    = $bookDAO;
     }
 
-    public function mapRowToLoan(array $row): Loan
+    public function mapArrayToLoan(array $row): Loan
     {
         $student = $this->studentDAO->getById($row['student_id']);
         $book    = $this->bookDAO->getById($row['book_id']);

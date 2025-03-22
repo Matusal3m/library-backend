@@ -21,7 +21,7 @@ class AuthorDAO
 
         $binds = ['name' => $name];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
         $author->setId($this->db->lastInsertId());
         return $author;
     }
@@ -31,9 +31,9 @@ class AuthorDAO
         $query = 'SELECT * FROM authors WHERE id = :id';
         $binds = ['id' => $id];
 
-        $authorRow = $this->db->prepareAndExec($query, $binds);
+        $authorRow = $this->db->prepareAndFetch($query, $binds);
 
-        $author = $this->authorMapper->mapRowToAuthor($authorRow[0]);
+        $author = $this->authorMapper->mapArrayToAuthor($authorRow[0]);
         return $author;
     }
 
@@ -49,7 +49,7 @@ class AuthorDAO
     public function getAllMapped(): array
     {
         return array_map(
-            fn($row) => $this->authorMapper->mapRowToAuthor($row),
+            fn($row) => $this->authorMapper->mapArrayToAuthor($row),
             $this->getAllRaw()
         );
     }
@@ -62,7 +62,7 @@ class AuthorDAO
         $query = 'UPDATE authors SET name = :name WHERE id = :id';
         $binds = ['id' => $id, 'name' => $name];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 
     public function delete(int $id): void
@@ -70,6 +70,6 @@ class AuthorDAO
         $query = 'DELETE FROM authors WHERE id = :id';
         $binds = ['id' => $id];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 }

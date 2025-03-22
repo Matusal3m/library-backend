@@ -5,7 +5,7 @@ use App\Models\Entities\Book;
 
 class BookMapper
 {
-    public function mapRowToBook(array $row): Book
+    public function mapArrayToBook(array $row): Book
     {
         $book = new Book(
             $row['title'],

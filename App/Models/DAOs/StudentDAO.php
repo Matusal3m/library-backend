@@ -33,7 +33,7 @@ class StudentDAO
             "enrollment_number" => $enrollment_number,
         ];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
         $student->setId($this->db->lastInsertId());
         return $student;
     }
@@ -43,9 +43,9 @@ class StudentDAO
         $query = 'SELECT * FROM students WHERE id = :id';
         $binds = ['id' => $id];
 
-        $studentRow = $this->db->prepareAndExec($query, $binds);
+        $studentRow = $this->db->prepareAndFetch($query, $binds);
 
-        $student = $this->studentMapper->mapRowToStudent($studentRow);
+        $student = $this->studentMapper->mapArrayToStudent($studentRow);
         return $student;
     }
 
@@ -61,7 +61,7 @@ class StudentDAO
     public function getAllMapped(): mixed
     {
         return array_map(
-            fn($row) => $this->studentMapper->mapRowToStudent($row),
+            fn($row) => $this->studentMapper->mapArrayToStudent($row),
             $this->getAllRaw()
         );
     }
@@ -89,7 +89,7 @@ class StudentDAO
             "has_active_loan"   => $has_active_loan,
         ];
 
-        return $this->db->prepareAndExec($query, $binds);
+        return $this->db->prepareAndExecute($query, $binds);
     }
 
     public function delete(int $id): void
@@ -97,6 +97,6 @@ class StudentDAO
         $query = 'DELETE FROM students WHERE id = :id';
         $binds = ['id' => $id];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 }

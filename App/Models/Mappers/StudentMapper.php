@@ -5,7 +5,7 @@ use App\Models\Entities\Student;
 
 class StudentMapper
 {
-    public function mapRowToStudent(array $row): Student
+    public function mapArrayToStudent(array $row): Student
     {
         $student = new Student(
             $row['name'],

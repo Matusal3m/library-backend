@@ -34,7 +34,7 @@ class BookDAO
             'seduc_code'   => $seduc_code,
         ];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
         $book->setId($this->db->lastInsertId());
         return $book;
     }
@@ -44,13 +44,13 @@ class BookDAO
         $query = 'SELECT * FROM books WHERE id = :id';
         $binds = ['id' => $id];
 
-        $bookRow = $this->db->prepareAndExec($query, $binds);
+        $bookRow = $this->db->prepareAndFetch($query, $binds);
 
         if (! $bookRow) {
             throw new ErrorException("Book not found");
         }
 
-        $book = $this->bookMapper->mapRowToBook($bookRow[0]);
+        $book = $this->bookMapper->mapArrayToBook($bookRow[0]);
         return $book;
     }
 
@@ -68,7 +68,7 @@ class BookDAO
         $query = 'SELECT * FROM books WHERE author_id = :author_id';
         $binds = ['author_id' => $authorId];
 
-        $booksRows = $this->db->prepareAndExec($query, $binds);
+        $booksRows = $this->db->prepareAndFetch($query, $binds);
 
         return $booksRows;
     }
@@ -76,7 +76,7 @@ class BookDAO
     public function getAllMappedByAuthorId(int $authorId): array
     {
         return array_map(
-            fn($row) => $this->bookMapper->mapRowToBook($row),
+            fn($row) => $this->bookMapper->mapArrayToBook($row),
             $this->getAllRawByAuthorId($authorId)
         );
     }
@@ -84,7 +84,7 @@ class BookDAO
     public function getAllMapped(): array
     {
         return array_map(
-            fn($row) => $this->bookMapper->mapRowToBook($row),
+            fn($row) => $this->bookMapper->mapArrayToBook($row),
             $this->getAllRaw()
         );
     }
@@ -113,7 +113,7 @@ class BookDAO
             'seduc_code'   => $seduc_code,
         ];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 
     public function delete(int $id): void
@@ -121,6 +121,6 @@ class BookDAO
         $query = 'DELETE FROM books WHERE id = :id';
         $binds = ['id' => $id];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 }

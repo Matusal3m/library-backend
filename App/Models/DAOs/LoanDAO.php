@@ -29,7 +29,7 @@ class LoanDAO
             'book_id'    => $book_id,
         ];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
         $loan->setId($this->db->lastInsertId());
         return $loan;
     }
@@ -39,9 +39,9 @@ class LoanDAO
         $query = 'SELECT * FROM loans WHERE id = :id';
         $binds = ['id' => $id];
 
-        $loanRow = $this->db->prepareAndExec($query, $binds);
+        $loanRow = $this->db->prepareAndFetch($query, $binds);
 
-        $loan = $this->loanMapper->mapRowToLoan($loanRow);
+        $loan = $this->loanMapper->mapArrayToLoan($loanRow);
         return $loan;
     }
 
@@ -57,7 +57,7 @@ class LoanDAO
     public function getAllMapped(): array
     {
         return array_map(
-            fn($row) => $this->loanMapper->mapRowToLoan($row),
+            fn($row) => $this->loanMapper->mapArrayToLoan($row),
             $this->getAllRaw()
         );
     }
@@ -81,7 +81,7 @@ class LoanDAO
             'extended_at' => $extended_at,
         ];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 
     public function delete(int $id): void
@@ -89,6 +89,6 @@ class LoanDAO
         $query = 'DELETE FROM loans WHERE id = :id';
         $binds = ['id' => $id];
 
-        $this->db->prepareAndExec($query, $binds);
+        $this->db->prepareAndExecute($query, $binds);
     }
 }
