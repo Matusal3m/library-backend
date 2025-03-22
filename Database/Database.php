@@ -32,6 +32,8 @@ class Database
      * specified in the $toBind array, and executes the statement. It simplifies the process
      * of using prepared statements with parameter binding.
      *
+     * WARNING: Don't use this for INSERT or UPDATE queries, it may cause duplication
+     *
      * @param string $query The SQL query with named placeholders (e.g., ':id')
      * @param array $toBind Associative array where keys are parameter names (without including colon)
      *                      and values are the corresponding values to bind
@@ -39,7 +41,7 @@ class Database
      *
      */
 
-    public function prepareAndExec(string $query, array $toBind): array
+    public function prepareAndFetch(string $query, array $toBind): array
     {
         $stmt    = $this->connection->prepare($query);
         $results = [];
@@ -55,6 +57,30 @@ class Database
         }
 
         return $results;
+    }
+
+    /**
+     * Prepares an SQL statement, binds values, and executes it.
+     *
+     * This function creates a prepared statement from the given query, binds all values
+     * specified in the $toBind array, and executes the statement, without returning the result.
+     *
+     * @param string $query The SQL query with named placeholders (e.g., ':id')
+     * @param array $toBind Associative array where keys are parameter names (without including colon)
+     *                      and values are the corresponding values to bind
+     * @return void
+     *
+     */
+
+    public function prepareAndExecute(string $query, array $toBind): void
+    {
+        $stmt = $this->connection->prepare($query);
+
+        foreach ($toBind as $key => $value) {
+            $stmt->bindValue(':' . $key, $value);
+        }
+
+        $stmt->execute();
     }
 
     /**
