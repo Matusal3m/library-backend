@@ -20,13 +20,14 @@ class LoanDAO
 
         $query =
             'INSERT INTO loans
-            (student_id, book_id)
+            (student_id, book_id, is_active)
             VALUES
-            (:student_id, :book_id)';
+            (:student_id, :book_id, :is_active)';
 
         $binds = [
             'student_id' => $student_id,
             'book_id'    => $book_id,
+            'is_active'  => $loan->getIsActive(),
         ];
 
         $this->db->prepareAndExecute($query, $binds);
@@ -71,11 +72,13 @@ class LoanDAO
         $started_at  = $loan->getStartedAt();
         $finish_date = $loan->getFinishDate();
         $extended_at = $loan->getExtendedAt();
+        $is_active   = $loan->getIsActive();
 
         $query = 'UPDATE loans SET
             started_at = :started_at
             finish_date = :finish_date
             extended_at = :extended_at
+            is_active = :is_active
             WHERE id = :id
         ';
 
@@ -83,6 +86,7 @@ class LoanDAO
             'started_at'  => $started_at,
             'finish_date' => $finish_date,
             'extended_at' => $extended_at,
+            'is_active'   => $is_active,
         ];
 
         $this->db->prepareAndExecute($query, $binds);

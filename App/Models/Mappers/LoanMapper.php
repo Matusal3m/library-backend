@@ -18,7 +18,11 @@ class LoanMapper
         $student = $this->studentDAO->getById($row['student_id']);
         $book    = $this->bookDAO->getById($row['book_id']);
 
-        $loan = new Loan($student, $book);
+        $loan = new Loan(
+            $student,
+            $book,
+            boolval($row['is_active'],
+            ));
 
         if (isset($row['id'])) {
             $loan->setId($row['id']);

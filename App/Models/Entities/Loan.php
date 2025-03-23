@@ -19,7 +19,9 @@ class Loan
 
     private DateTime|null $extendedAt;
 
-    public function __construct(Student $student, Book $book)
+    private bool $isActive;
+
+    public function __construct(Student $student, Book $book, bool $isActive)
     {
         if (! $book->getIsAvailable()) {
             throw new Exception("Book cannot be borrowed");
@@ -32,6 +34,7 @@ class Loan
         $this->book       = $book;
         $this->startedAt  = date_create('now');
         $this->finishDate = date_create('now')->add(date_interval_create_from_date_string('15 days'));
+        $this->isActive   = $isActive;
     }
 
     public function setId(int $id): void
@@ -41,6 +44,16 @@ class Loan
         }
 
         $this->id = $id;
+    }
+
+    public function getIsActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): void
+    {
+        $this->isActive = $isActive;
     }
 
     public function getId(): int | null
@@ -86,4 +99,5 @@ class Loan
 
         $this->finishDate = $newFinishDate;
     }
+
 }
