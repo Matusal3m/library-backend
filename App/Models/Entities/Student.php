@@ -6,7 +6,7 @@ use LogicException;
 
 class Student
 {
-    private int|null $id;
+    private int|null $id = null;
 
     private string $name;
 

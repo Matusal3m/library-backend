@@ -7,7 +7,7 @@ use LogicException;
 
 class Loan
 {
-    private int|null $id;
+    private int|null $id = null;
 
     private Student $student;
 
