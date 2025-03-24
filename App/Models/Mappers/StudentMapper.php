@@ -11,7 +11,7 @@ class StudentMapper
             $row['name'],
             $row['enrollment_number'],
             $row['class_room'],
-            boolval($row['has_active_loan'])
+            $row['has_active_loan']
         );
 
         if (isset($row['id'])) {
