@@ -10,7 +10,7 @@ class BookMapper
         $book = new Book(
             $row['title'],
             $row['author_id'],
-            boolval($row['is_available']),
+            $row['is_available'],
             $row['seduc_code'],
         );
 

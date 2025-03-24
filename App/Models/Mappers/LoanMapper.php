@@ -15,14 +15,21 @@ class LoanMapper
 
     public function mapArrayToLoan(array $row): Loan
     {
-        $student = $this->studentDAO->getById($row['student_id']);
-        $book    = $this->bookDAO->getById($row['book_id']);
+        $student    = $this->studentDAO->getById($row['student_id']);
+        $book       = $this->bookDAO->getById($row['book_id']);
+        $isActive   = $row['is_active'];
+        $startedAt  = $row['started_at'];
+        $extendedAt = $row['extended_at'];
+        $finishDate = $row['finish_date'];
 
-        $loan = new Loan(
+        $loan = Loan::fromDatabase(
             $student,
             $book,
-            boolval($row['is_active'],
-            ));
+            $isActive,
+            $startedAt,
+            $extendedAt,
+            $finishDate
+        );
 
         if (isset($row['id'])) {
             $loan->setId($row['id']);

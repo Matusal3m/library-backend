@@ -1,10 +1,9 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\DAOs\BookDAO;
-use App\Models\DAOs\LoanDAO;
-use App\Models\DAOs\StudentDAO;
-use App\Models\Mappers\LoanMapper;
+use App\Models\Services\LoansService;
+use App\Util\Converter;
+use App\Validation\IdValidator;
 use Exception;
 use Http\Request;
 use Http\Response;
@@ -13,125 +12,129 @@ class LoansController
 {
 
     public function __construct(
-        private LoanMapper $loanMapper,
-        private LoanDAO $loanDAO,
-        private StudentDAO $studentDAO,
-        private BookDAO $bookDAO,
+        private LoansService $loanService
     ) {
-        $this->loanMapper = $loanMapper;
-        $this->loanDAO    = $loanDAO;
-        $this->studentDAO = $studentDAO;
-        $this->bookDAO    = $bookDAO;
+        $this->loanService = $loanService;
     }
 
     public function create(Request $request, Response $response): void
     {
-        $data      = $request->body();
-        $studentId = $data['student_id'];
-        $bookId    = $data['book_id'];
+        $data = $request->body();
 
-        if (! isset($studentId, $bookId)) {
+        if (! isset($data['student_id'], $data['book_id'])) {
             $response->json(['error' => 'Missing student_id and/or book_id'], 400);
             return;
         }
 
-        if (
-            ! filter_var($studentId, FILTER_VALIDATE_INT) ||
-            ! filter_var($bookId, FILTER_VALIDATE_INT)
-        ) {
-            $response->json(['error' => 'student_id and book_id must be an int'], 400);
-            return;
-        }
-
-        $student = $this->studentDAO->getById($studentId);
-        if (! $student) {
-            $response->json(['error' => 'Student not found'], 404);
-        }
-
-        $book = $this->bookDAO->getById($bookId);
-        if (! $book) {
-            $response->json(['error' => 'Book not found'], 404);
-        }
-
         try {
-            $loan = $this->loanMapper->mapArrayToLoan($data);
+            [$studentId, $bookId] = IdValidator::validateMany([
+                'studentId' => $data['student_id'],
+                'bookId'    => $data['book_id'],
+            ]);
 
-            $savedLoan = $this->loanDAO->save($loan);
+            $createdLoan = $this->loanService->createLoan($studentId, $bookId);
 
             $response->json([
-                'id'          => $savedLoan->getId(),
-                'student_id'  => $savedLoan->getStudent(),
-                'book_id'     => $savedLoan->getBook(),
-                'started_at'  => $savedLoan->getStartedAt(),
-                'finish_date' => $savedLoan->getFinishDate(),
-                'is_active'   => $savedLoan->getIsActive(),
+                'id'          => $createdLoan->getId(),
+                'student_id'  => $createdLoan->getStudent()->getId(),
+                'book_id'     => $createdLoan->getBook()->getId(),
+                'started_at'  => $createdLoan->getStartedAt(),
+                'extended_at' => $createdLoan->getExtendedAt(),
+                'finish_date' => $createdLoan->getFinishDate(),
+                'is_active'   => $createdLoan->getIsActive(),
             ]);
 
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 500);
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
         }
     }
 
     public function getById(Request $request, Response $response, array $id): void
     {
-        $loanId = $id[0];
-
-        if (! filter_var($loanId, FILTER_VALIDATE_INT)) {
-            $response->json(['error' => 'Loan id must be an int'], 400);
-            return;
-        }
-
         try {
-            $loan = $this->loanDAO->getById($loanId);
-
-            if (! $loan) {
-                $response->json(['error' => 'Loan not found'], 404);
-                return;
-            }
+            $loanId = IdValidator::validateOne($id[0]);
+            $loan   = $this->loanService->getLoan($loanId);
 
             $response->json([
-                'student_id'  => $loan->getStudent(),
-                'book_id'     => $loan->getBook(),
+                'student_id'  => $loan->getStudent()->getId(),
+                'book_id'     => $loan->getBook()->getId(),
                 'started_at'  => $loan->getStartedAt(),
+                'extended_at' => $loan->getExtendedAt(),
                 'finish_date' => $loan->getFinishDate(),
                 'is_active'   => $loan->getIsActive(),
             ]);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 500);
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
         }
     }
 
     public function getAll(Request $request, Response $response): void
     {
         try {
-            $data = $this->loanDAO->getAllRaw();
+            $data = $this->loanService->getAllLoans();
+
+            $data = Converter::convertKeysToBoolean($data, ['is_active']);
 
             $response->json($data);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 500);
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
         }
     }
 
     public function delete(Request $request, Response $response, array $id): void
     {
-        $loanId = $id[0];
+        try {
+            $loanId = IdValidator::validateOne($id[0]);
+            $this->loanService->deleteLoan($loanId);
 
-        if (! filter_var($loanId, FILTER_VALIDATE_INT)) {
-            $response->json(['error' => 'Loan id must be an int'], 400);
+            $response->json(['status' => 'sucess']);
+        } catch (Exception $e) {
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
+        }
+    }
+
+    public function desactive(Request $request, Response $response): void
+    {
+        $data = $request->body();
+
+        if (! isset($data['loan_id'])) {
+            $response->json(['error' => 'loan_id is required'], 404);
             return;
         }
 
         try {
-            $loan = $this->loanDAO->getById($loanId);
-            if (! $loan) {
-                $response->json(['error' => 'Loan not found'], 404);
-                return;
-            }
+            $loanId = IdValidator::validateOne($request['loan_id']);
+            $this->loanService->desactiveLoan($loanId);
 
-            $this->loanDAO->delete($loanId);
             $response->json(['status' => 'sucess']);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 500);
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
+        }
+    }
+
+    public function extend(Request $request, Response $response): void
+    {
+        $data = $request->body();
+
+        if (! isset($data['loan_id'])) {
+            $response->json(['error' => 'loan_id is required'], 404);
+            return;
+        }
+
+        try {
+            $loanId = IdValidator::validateOne($data['loan_id']);
+            $loan   = $this->loanService->extendLoan($loanId);
+
+            $response->json([
+                'student_id'  => $loan->getStudent()->getId(),
+                'book_id'     => $loan->getBook()->getId(),
+                'started_at'  => $loan->getStartedAt(),
+                'extended_at' => $loan->getExtendedAt(),
+                'finish_date' => $loan->getFinishDate(),
+                'is_active'   => $loan->getIsActive(),
+            ]);
+        } catch (Exception $e) {
+            $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
         }
     }
 }

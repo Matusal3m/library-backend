@@ -7,11 +7,10 @@ use Database\Database;
 
 class AuthorDAO
 {
-    public function __construct(private Database $db, private AuthorMapper $authorMapper)
-    {
-        $this->db           = $db;
-        $this->authorMapper = $authorMapper;
-    }
+    public function __construct(
+        private Database $db,
+        private AuthorMapper $authorMapper
+    ) {}
 
     public function save(Author $author): Author
     {

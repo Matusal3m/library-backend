@@ -7,27 +7,32 @@ use Database\Database;
 
 class LoanDAO
 {
-    public function __construct(private Database $db, private LoanMapper $loanMapper)
-    {
-        $this->db         = $db;
-        $this->loanMapper = $loanMapper;
-    }
+    public function __construct(
+        private Database $db,
+        private LoanMapper $loanMapper
+    ) {}
 
     public function save(Loan $loan): Loan
     {
-        $student_id = $loan->getStudent()->getId();
-        $book_id    = $loan->getBook()->getId();
+        $student_id  = $loan->getStudent()->getId();
+        $book_id     = $loan->getBook()->getId();
+        $started_at  = $loan->getStartedAt();
+        $finish_date = $loan->getFinishDate();
+        $extended_at = $loan->getExtendedAt();
 
         $query =
             'INSERT INTO loans
-            (student_id, book_id, is_active)
+            (student_id, book_id, is_active, started_at, finish_date, extended_at)
             VALUES
-            (:student_id, :book_id, :is_active)';
+            (:student_id, :book_id, :is_active, :started_at, :finish_date, :extended_at)';
 
         $binds = [
-            'student_id' => $student_id,
-            'book_id'    => $book_id,
-            'is_active'  => $loan->getIsActive(),
+            'student_id'  => $student_id,
+            'book_id'     => $book_id,
+            'is_active'   => $loan->getIsActive(),
+            'started_at'  => $started_at,
+            'finish_date' => $finish_date,
+            'extended_at' => $extended_at,
         ];
 
         $this->db->prepareAndExecute($query, $binds);
@@ -46,7 +51,8 @@ class LoanDAO
             return null;
         }
 
-        $loan = $this->loanMapper->mapArrayToLoan($loanRow);
+        $loan = $this->loanMapper->mapArrayToLoan($loanRow[0]);
+
         return $loan;
     }
 
@@ -69,20 +75,22 @@ class LoanDAO
 
     public function update(Loan $loan): void
     {
+        $id          = $loan->getId();
         $started_at  = $loan->getStartedAt();
         $finish_date = $loan->getFinishDate();
         $extended_at = $loan->getExtendedAt();
         $is_active   = $loan->getIsActive();
 
         $query = 'UPDATE loans SET
-            started_at = :started_at
-            finish_date = :finish_date
-            extended_at = :extended_at
+            started_at = :started_at,
+            finish_date = :finish_date,
+            extended_at = :extended_at,
             is_active = :is_active
             WHERE id = :id
         ';
 
         $binds = [
+            'id'          => $id,
             'started_at'  => $started_at,
             'finish_date' => $finish_date,
             'extended_at' => $extended_at,

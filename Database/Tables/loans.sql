@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS loans (
     book_id INTEGER NOT NULL,
     started_at TEXT NOT NULL,
     finish_date TEXT NOT NULL,
-    extended_at TEXT NOT NULL,
+    extended_at TEXT,
     is_active BOOLEAN NOT NULL,
     FOREIGN KEY (student_id) REFERENCES students(id),
     FOREIGN KEY (book_id) REFERENCES books(id)

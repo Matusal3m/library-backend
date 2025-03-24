@@ -34,13 +34,13 @@ class Author
         return $this->name;
     }
 
-    public function updateName(string $newName): static
+    public function updateName(string $newName)
     {
         if (empty($newName)) {
             throw new Exception("Author name cannot be empty", 1);
         }
 
-        return $this;
+        $this->name = $newName;
     }
 
 }

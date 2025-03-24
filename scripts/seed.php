@@ -71,7 +71,7 @@ $loans = [
         'book_id'     => 1,
         'started_at'  => date('d-m-y H:i'),
         'finish_date' => date('d-m-y H:i'),
-        'extended_at' => 0,
+        'extended_at' => null,
         'is_active'   => true,
     ],
 ];

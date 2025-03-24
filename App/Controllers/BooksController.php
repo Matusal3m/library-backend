@@ -1,9 +1,9 @@
 <?php
 namespace App\Controllers;
 
-use App\Models\DAOs\AuthorDAO;
-use App\Models\DAOs\BookDAO;
-use App\Models\Mappers\BookMapper;
+use App\Models\Services\BooksService;
+use App\Util\Converter;
+use App\Validation\IdValidator;
 use Exception;
 use Http\Request;
 use Http\Response;
@@ -12,108 +12,52 @@ class BooksController extends Controller
 {
 
     public function __construct(
-        private BookDAO $bookDAO,
-        private AuthorDAO $authorDAO,
-        private BookMapper $bookMapper
+        private BooksService $booksService,
     ) {
-        $this->bookDAO    = $bookDAO;
-        $this->authorDAO  = $authorDAO;
-        $this->bookMapper = $bookMapper;
+        $this->booksService = $booksService;
     }
 
     public function create(Request $request, Response $response): void
     {
         $data = $request->body();
 
-        if (! isset($data['title'], $data['author_id'], $data['seduc_code'])) {
-            $response->json(['error' => 'Missing title, author_id or seduc_code in request'], 400);
-            return;
-        }
-
-        if (! $this->authorDAO->getById($data['author_id'])) {
-            $response->json(['error' => 'Author not found'], 404);
-            return;
-        }
-
         try {
-            $book = $this->bookMapper->mapArrayToBook($data);
-
-            $savedBook = $this->bookDAO->save($book);
+            $book = $this->booksService->createBook($data);
 
             $response->json([
-                'id'           => $savedBook->getId(),
-                'title'        => $savedBook->getTitle(),
-                'author_id'    => $savedBook->getAuthorId(),
-                'seduc_code'   => $savedBook->getSeducCode(),
-                'is_available' => $savedBook->getIsAvailable(),
+                'id'           => $book->getId(),
+                'title'        => $book->getTitle(),
+                'author_id'    => $book->getAuthorId(),
+                'seduc_code'   => $book->getSeducCode(),
+                'is_available' => $book->getIsAvailable(),
             ], 201);
 
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 400);
+            $response->json(['error' => $e->getMessage()], $e->getCode());
         }
     }
 
     public function update(Request $request, Response $response, array $id): void
     {
-        $bookId = $id[0];
-        $data   = $request->body();
-
-        if (! is_int($bookId)) {
-            $response->json(['error' => 'Id must be an int'], 400);
-            return;
-        }
-
-        $book = $this->bookDAO->getById($bookId);
-        if (! $book) {
-            $response->json(['error' => 'Book not found'], 404);
-            return;
-        }
-
-        if (isset($data['title'])) {
-            $book->updateTitle($data['title']);
-        }
-
-        if (isset($data['author_id'])) {
-
-            if (! is_int($data['author_id'])) {
-                $response->json(['error' => 'Author Id must be an int'], 400);
-                return;
-            }
-
-            if (! $this->authorDAO->getById($data['author_id'])) {
-                $response->json(['error' => 'Author not found'], 404);
-                return;
-            }
-            $book->updateAuthorId($data['author_id']);
-        }
-
-        if (isset($data['seduc_code'])) {
-            $book->setSeducCode($data['seduc_code']);
-        }
-
-        if (isset($data['is_available'])) {
-            $book->setIsAvailable((bool) $data['is_available']);
-        }
+        $data = $request->body();
 
         try {
-            $this->bookDAO->update($book);
+            $bookId = IdValidator::validateOne($id[0]);
+
+            $this->booksService->updateBook($bookId, $data);
+
             $response->json(['message' => 'Book updated']);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 400);
+            $response->json(['error' => $e->getMessage()], $e->getCode());
         }
     }
 
     public function getById(Request $request, Response $response, array $id): void
     {
-        $bookId = $id[0];
-        if (! is_int($id[0])) {
-            $response->json(['error' => 'Id must be an int'], 400);
-            return;
-        }
-
         try {
+            $bookId = IdValidator::validateOne($id[0]);
 
-            $book = $this->bookDAO->getById($bookId);
+            $book = $this->booksService->getBook($bookId);
 
             $response->json([
                 'title'        => $book->getTitle(),
@@ -122,40 +66,32 @@ class BooksController extends Controller
                 'seduc_code'   => $book->getSeducCode(),
             ]);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 404);
+            $response->json(['error' => $e->getMessage()], $e->getCode());
         }
     }
 
     public function getAll(Request $request, Response $response): void
     {
         try {
-            $data = $this->bookDAO->getAllRaw();
+            $books = $this->booksService->getAllBooks();
 
-            $response->json($data);
+            $books = Converter::convertKeysToBoolean($books, ['is_available']);
+
+            $response->json($books);
         } catch (Exception $e) {
-            $response->json(['error' => $e->getMessage()], 500);
+            $response->json(['error' => $e->getMessage()], $e->getCode());
         }
     }
 
     public function delete(Request $request, Response $response, array $id): void
     {
-        $bookId = $id[0];
-
-        if (! is_int($bookId)) {
-            $response->json(['error' => 'Id must be an int'], 400);
-            return;
-        }
-
-        $book = $this->bookDAO->getById($bookId);
-        if (! $book) {
-            $response->json(['error' => 'Book not found'], 404);
-            return;
-        }
-
         try {
-            $this->bookDAO->delete($bookId);
+            $bookId = IdValidator::validateOne($id[0]);
+
+            $this->booksService->deleteBook($bookId);
+
             $response->json(['status' => 'sucess']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], 500);
         }
     }

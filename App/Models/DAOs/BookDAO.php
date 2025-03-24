@@ -7,11 +7,10 @@ use Database\Database;
 
 class BookDAO
 {
-    public function __construct(private Database $db, private BookMapper $bookMapper)
-    {
-        $this->db         = $db;
-        $this->bookMapper = $bookMapper;
-    }
+    public function __construct(
+        private Database $db,
+        private BookMapper $bookMapper
+    ) {}
 
     public function save(Book $book): Book
     {
@@ -101,7 +100,7 @@ class BookDAO
             title = :title,
             author_id = :author_id,
             is_available = :is_available,
-            seduc_code = :seduc_code,
+            seduc_code = :seduc_code
         WHERE id = :id';
 
         $binds = [

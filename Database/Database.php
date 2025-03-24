@@ -37,7 +37,7 @@ class Database
      * @param string $query The SQL query with named placeholders (e.g., ':id')
      * @param array $toBind Associative array where keys are parameter names (without including colon)
      *                      and values are the corresponding values to bind
-     * @return false|mixed Returns the query value on successful execution, false on failure
+     * @return false|array Returns the query value on successful execution, false on failure
      *
      */
 

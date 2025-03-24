@@ -1,7 +1,7 @@
 <?php
 namespace App\Models\Entities;
 
-use DateTime;
+use App\Util\DateHandler;
 use Exception;
 use LogicException;
 
@@ -13,47 +13,81 @@ class Loan
 
     private Book $book;
 
-    private DateTime $startedAt;
+    private string $startedAt;
 
-    private DateTime $finishDate;
+    private string $finishDate;
 
-    private DateTime|null $extendedAt;
+    private string|null $extendedAt = null;
 
     private bool $isActive;
 
-    public function __construct(Student $student, Book $book, bool $isActive)
+    public function __construct(Student $student, Book $book)
     {
-        if (! $book->getIsAvailable()) {
-            throw new Exception("Book cannot be borrowed");
-        }
-
-        if ($student->getHasActiveLoan()) {
-            throw new Exception("Student has already one book");
-        }
-
         $this->book       = $book;
-        $this->startedAt  = date_create('now');
-        $this->finishDate = date_create('now')->add(date_interval_create_from_date_string('15 days'));
-        $this->isActive   = $isActive;
+        $this->student    = $student;
+        $this->startedAt  = DateHandler::dateNow();
+        $this->finishDate = DateHandler::daysFromNow(15);
+        $this->isActive   = $isActive ?? false;
+    }
+
+    public static function fromDatabase(
+        Student $student,
+        Book $book,
+        bool $isActive,
+        string $startedAt,
+        string | null $extendedAt,
+        string $finishDate
+    ) {
+        $loan             = new self($student, $book);
+        $loan->isActive   = $isActive;
+        $loan->startedAt  = $startedAt;
+        $loan->extendedAt = $extendedAt;
+        $loan->finishDate = $finishDate;
+        return $loan;
     }
 
     public function setId(int $id): void
     {
         if ($this->id !== null) {
-            throw new LogicException("ID already exist and cannot by changed");
+            throw new LogicException("ID already exists and cannot by changed");
         }
 
         $this->id = $id;
     }
 
+    public function active(): void
+    {
+        if ($this->isActive) {
+            throw new Exception("Loan is already active");
+        }
+
+        if (! $this->book->getIsAvailable() && $this->student->getHasActiveLoan()) {
+            throw new Exception("Book cannot be borrowed and Student already has one book");
+        }
+
+        if (! $this->book->getIsAvailable()) {
+            throw new Exception("Book cannot be borrowed");
+        }
+
+        if ($this->student->getHasActiveLoan()) {
+            throw new Exception("Student already has one book");
+        }
+
+        $this->isActive = true;
+    }
+
+    public function desactive(): void
+    {
+        if (! $this->isActive) {
+            throw new Exception("Loan is already desactived");
+        }
+
+        $this->isActive = false;
+    }
+
     public function getIsActive(): bool
     {
         return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): void
-    {
-        $this->isActive = $isActive;
     }
 
     public function getId(): int | null
@@ -71,33 +105,26 @@ class Loan
         return $this->book;
     }
 
-    public function getStartedAt(): DateTime
+    public function getStartedAt(): string
     {
         return $this->startedAt;
     }
 
-    public function getFinishDate(): DateTime
+    public function getFinishDate(): string
     {
         return $this->finishDate;
     }
 
-    public function getExtendedAt(): DateTime
+    public function getExtendedAt(): string | null
     {
         return $this->extendedAt;
     }
 
-    public function extendLoan(): void
+    public function extend(): void
     {
-        $this->extendedAt = date_create('now');
+        $this->extendedAt = DateHandler::dateNow();
 
-        $prevFinishDate = $this->finishDate;
-
-        $newFinishDate = date_add(
-            $prevFinishDate,
-            date_interval_create_from_date_string('15 days')
-        );
-
-        $this->finishDate = $newFinishDate;
+        $this->finishDate = DateHandler::daysFromNow(15);
     }
 
 }

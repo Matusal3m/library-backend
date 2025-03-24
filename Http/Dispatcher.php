@@ -17,8 +17,9 @@ class Dispatcher
 
     public function dispatch(string $path)
     {
-        $path   = Router::normalizePath($path);
-        $method = strtoupper($_SERVER['REQUEST_METHOD']);
+        $path       = Router::normalizePath($path);
+        $method     = strtoupper($_SERVER['REQUEST_METHOD']);
+        $routeFound = false;
         foreach (Router::routes() as $route) {
             $pattern = '#^' . preg_replace('/{id}/', '([\w-]+)', $route['path']) . '$#';
 
@@ -28,6 +29,7 @@ class Dispatcher
             ) {
                 continue;
             }
+            $routeFound = true;
 
             array_shift($matches);
 
@@ -39,6 +41,10 @@ class Dispatcher
             $controllerInstance = $this->dice->create($class);
 
             $controllerInstance->{$function}(new Request, new Response, $matches);
+        }
+
+        if (! $routeFound) {
+            echo "could not <b>$method</b> $path";
         }
     }
 }

@@ -10,10 +10,7 @@ class StudentDAO
     public function __construct(
         private Database $db,
         private StudentMapper $studentMapper
-    ) {
-        $this->db            = $db;
-        $this->studentMapper = $studentMapper;
-    }
+    ) {}
 
     public function save(Student $student): Student
     {
@@ -25,7 +22,7 @@ class StudentDAO
             'INSERT INTO students
             (name, enrollment_number, class_room)
             VALUES
-            (:name, :class_room, :enrollment_number)';
+            (:name, :enrollment_number, :class_room)';
 
         $binds = [
             "name"              => $name,
@@ -49,7 +46,7 @@ class StudentDAO
             return null;
         }
 
-        $student = $this->studentMapper->mapArrayToStudent($studentRow);
+        $student = $this->studentMapper->mapArrayToStudent($studentRow[0]);
         return $student;
     }
 
