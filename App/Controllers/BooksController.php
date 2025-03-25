@@ -29,6 +29,8 @@ class BooksController extends Controller
                 'title'        => $book->getTitle(),
                 'author_id'    => $book->getAuthorId(),
                 'seduc_code'   => $book->getSeducCode(),
+                'genre'        => $book->getGenre(),
+                'quantity'     => $book->getQuantity(),
                 'is_available' => $book->getIsAvailable(),
             ], 201);
 
@@ -62,8 +64,10 @@ class BooksController extends Controller
             $response->json([
                 'title'        => $book->getTitle(),
                 'author_id'    => $book->getAuthorId(),
-                'is_available' => $book->getIsAvailable(),
                 'seduc_code'   => $book->getSeducCode(),
+                'genre'        => $book->getGenre(),
+                'quantity'     => $book->getQuantity(),
+                'is_available' => $book->getIsAvailable(),
             ]);
         } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], $e->getCode());

@@ -12,6 +12,8 @@ class BookMapper
             $row['author_id'],
             $row['is_available'],
             $row['seduc_code'],
+            $row['genre'],
+            $row['quantity'],
         );
 
         if (isset($row['id'])) {

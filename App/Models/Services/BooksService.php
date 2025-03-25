@@ -18,8 +18,17 @@ class BooksService
 
     public function createBook(array $data): Book
     {
-        if (! isset($data['title'], $data['author_id'], $data['seduc_code'])) {
-            throw new Exception('Missing title, author_id or seduc_code in request', 400);
+        if (! isset(
+            $data['title'],
+            $data['author_id'],
+            $data['seduc_code'],
+            $data['genre'],
+            $data['quantity']
+        )) {
+            throw new Exception(
+                'Missing title, author_id, seduc_code, genre and/or quantity in request',
+                400
+            );
         }
 
         $author = $this->authorDAO->getById($data['author_id']);
@@ -39,7 +48,15 @@ class BooksService
         }
 
         if (isset($data['title'])) {
-            $book->updateTitle($data['title']);
+            $book->setTitle($data['title']);
+        }
+
+        if (isset($data['genre'])) {
+            $book->setGenre($data['genre']);
+        }
+
+        if (isset($data['quantity'])) {
+            $book->setQuantity($data['quantity']);
         }
 
         if (isset($data['author_id'])) {
