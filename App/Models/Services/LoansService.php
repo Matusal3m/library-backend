@@ -55,7 +55,11 @@ class LoansService
 
     public function getAllLoans(): array
     {
-        return $this->loanDAO->getAllRaw();
+        $loans = $this->loanDAO->getAllMapped();
+        return array_map(
+            fn($loan) => $this->loanMapper->mapLoanToArray($loan),
+            $loans
+        );
     }
 
     public function deleteLoan(int $id)

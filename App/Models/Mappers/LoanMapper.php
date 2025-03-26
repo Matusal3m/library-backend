@@ -21,6 +21,7 @@ class LoanMapper
         $startedAt  = $row['started_at'];
         $extendedAt = $row['extended_at'];
         $finishDate = $row['finish_date'];
+        $returnedAt = $row['returned_at'];
 
         $loan = Loan::fromDatabase(
             $student,
@@ -28,7 +29,8 @@ class LoanMapper
             $isActive,
             $startedAt,
             $extendedAt,
-            $finishDate
+            $finishDate,
+            $returnedAt
         );
 
         if (isset($row['id'])) {
@@ -36,6 +38,22 @@ class LoanMapper
         }
 
         return $loan;
+    }
+
+    public function mapLoanToArray(Loan $loan): array
+    {
+        return [
+            'id'               => $loan->getId(),
+            'student_id'       => $loan->getStudent()->getId(),
+            'book_id'          => $loan->getBook()->getId(),
+            'started_at'       => $loan->getStartedAt(),
+            'extended_at'      => $loan->getExtendedAt(),
+            'finish_date'      => $loan->getFinishDate(),
+            'is_active'        => $loan->getIsActive(),
+            'returned_at'      => $loan->getReturnedAt(),
+            'is_late'          => $loan->getIsLate(),
+            'returned_on_time' => $loan->getReturnedOnTime(),
+        ];
     }
 
 }

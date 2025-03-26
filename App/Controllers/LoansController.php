@@ -2,7 +2,6 @@
 namespace App\Controllers;
 
 use App\Models\Services\LoansService;
-use App\Util\Converter;
 use App\Validation\IdValidator;
 use Exception;
 use Http\Request;
@@ -35,13 +34,16 @@ class LoansController
             $createdLoan = $this->loanService->createLoan($studentId, $bookId);
 
             $response->json([
-                'id'          => $createdLoan->getId(),
-                'student_id'  => $createdLoan->getStudent()->getId(),
-                'book_id'     => $createdLoan->getBook()->getId(),
-                'started_at'  => $createdLoan->getStartedAt(),
-                'extended_at' => $createdLoan->getExtendedAt(),
-                'finish_date' => $createdLoan->getFinishDate(),
-                'is_active'   => $createdLoan->getIsActive(),
+                'id'               => $createdLoan->getId(),
+                'student_id'       => $createdLoan->getStudent()->getId(),
+                'book_id'          => $createdLoan->getBook()->getId(),
+                'started_at'       => $createdLoan->getStartedAt(),
+                'extended_at'      => $createdLoan->getExtendedAt(),
+                'finish_date'      => $createdLoan->getFinishDate(),
+                'returned_at'      => $createdLoan->getReturnedAt(),
+                'is_active'        => $createdLoan->getIsActive(),
+                'is_late'          => $createdLoan->getIsLate(),
+                'returned_on_time' => $createdLoan->getReturnedOnTime(),
             ]);
 
         } catch (Exception $e) {
@@ -56,12 +58,15 @@ class LoansController
             $loan   = $this->loanService->getLoan($loanId);
 
             $response->json([
-                'student_id'  => $loan->getStudent()->getId(),
-                'book_id'     => $loan->getBook()->getId(),
-                'started_at'  => $loan->getStartedAt(),
-                'extended_at' => $loan->getExtendedAt(),
-                'finish_date' => $loan->getFinishDate(),
-                'is_active'   => $loan->getIsActive(),
+                'student_id'       => $loan->getStudent()->getId(),
+                'book_id'          => $loan->getBook()->getId(),
+                'started_at'       => $loan->getStartedAt(),
+                'extended_at'      => $loan->getExtendedAt(),
+                'finish_date'      => $loan->getFinishDate(),
+                'returned_at'      => $loan->getReturnedAt(),
+                'is_active'        => $loan->getIsActive(),
+                'is_late'          => $loan->getIsLate(),
+                'returned_on_time' => $loan->getReturnedOnTime(),
             ]);
         } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);
@@ -72,8 +77,6 @@ class LoansController
     {
         try {
             $data = $this->loanService->getAllLoans();
-
-            $data = Converter::convertKeysToBoolean($data, ['is_active']);
 
             $response->json($data);
         } catch (Exception $e) {
@@ -126,12 +129,15 @@ class LoansController
             $loan   = $this->loanService->extendLoan($loanId);
 
             $response->json([
-                'student_id'  => $loan->getStudent()->getId(),
-                'book_id'     => $loan->getBook()->getId(),
-                'started_at'  => $loan->getStartedAt(),
-                'extended_at' => $loan->getExtendedAt(),
-                'finish_date' => $loan->getFinishDate(),
-                'is_active'   => $loan->getIsActive(),
+                'student_id'       => $loan->getStudent()->getId(),
+                'book_id'          => $loan->getBook()->getId(),
+                'started_at'       => $loan->getStartedAt(),
+                'extended_at'      => $loan->getExtendedAt(),
+                'finish_date'      => $loan->getFinishDate(),
+                'returned_at'      => $loan->getReturnedAt(),
+                'is_active'        => $loan->getIsActive(),
+                'is_late'          => $loan->getIsLate(),
+                'returned_on_time' => $loan->getReturnedOnTime(),
             ]);
         } catch (Exception $e) {
             $response->json(['error' => $e->getMessage()], $e->getCode() ?? 500);

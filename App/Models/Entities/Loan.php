@@ -42,13 +42,17 @@ class Loan
         bool $isActive,
         string $startedAt,
         string | null $extendedAt,
-        string $finishDate
+        string $finishDate,
+        string | null $returnedAt
     ) {
-        $loan             = new self($student, $book);
-        $loan->isActive   = $isActive;
-        $loan->startedAt  = $startedAt;
-        $loan->extendedAt = $extendedAt;
-        $loan->finishDate = $finishDate;
+        $loan                 = new self($student, $book);
+        $loan->isActive       = $isActive;
+        $loan->startedAt      = $startedAt;
+        $loan->extendedAt     = $extendedAt;
+        $loan->finishDate     = $finishDate;
+        $loan->returnedAt     = $returnedAt;
+        $loan->isLate         = $loan->checkIfIsLate($finishDate, $isActive);
+        $loan->returnedOnTime = $loan->checkIfWasReturnedOnTime($returnedAt, $finishDate);
         return $loan;
     }
 
@@ -88,6 +92,12 @@ class Loan
             throw new Exception("Loan is already desactived");
         }
 
+        $this->returnedAt     = DateHandler::dateNow();
+        $this->returnedOnTime = $this->checkIfWasReturnedOnTime(
+            $this->returnedAt,
+            $this->finishDate
+        );
+        $this->isLate   = null;
         $this->isActive = false;
     }
 
@@ -133,7 +143,7 @@ class Loan
         $this->finishDate = DateHandler::daysFromNow(15);
     }
 
-    public function getReturnedAtAt(): string | null
+    public function getReturnedAt(): string | null
     {
         return $this->returnedAt;
     }
