@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Util;
 
 class DateHandler
@@ -28,5 +29,13 @@ class DateHandler
         $dateTime->add($daysInterval);
 
         return $dateTime->format(self::$format);
+    }
+
+    public static function isGreater(string $dateOne, string $dateTwo): bool
+    {
+        $dateOne     = date_create_from_format(self::$format, $dateOne);
+        $dateTwo     = date_create_from_format(self::$format, $dateTwo);
+
+        return $dateOne > $dateTwo;
     }
 }
