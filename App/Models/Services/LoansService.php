@@ -57,7 +57,7 @@ class LoansService
     {
         $loans = $this->loanDAO->getAllMapped();
         return array_map(
-            fn($loan) => $this->loanMapper->mapLoanToArray($loan),
+            fn($loan) => $this->loanMapper->mapLoanToReadableArray($loan),
             $loans
         );
     }

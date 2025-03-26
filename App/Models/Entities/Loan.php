@@ -13,13 +13,13 @@ class Loan
 
     private Book $book;
 
-    private string $startedAt;
+    private int $startedAt;
 
-    private string $finishDate;
+    private int $finishDate;
 
-    private string|null $extendedAt = null;
+    private int|null $extendedAt = null;
 
-    private string|null $returnedAt = null;
+    private int|null $returnedAt = null;
 
     private bool|null $isLate = null;
 
@@ -40,10 +40,10 @@ class Loan
         Student $student,
         Book $book,
         bool $isActive,
-        string $startedAt,
-        string | null $extendedAt,
-        string $finishDate,
-        string | null $returnedAt
+        int $startedAt,
+        int | null $extendedAt,
+        int $finishDate,
+        int | null $returnedAt
     ) {
         $loan                 = new self($student, $book);
         $loan->isActive       = $isActive;
@@ -121,17 +121,17 @@ class Loan
         return $this->book;
     }
 
-    public function getStartedAt(): string
+    public function getStartedAt(): int
     {
         return $this->startedAt;
     }
 
-    public function getFinishDate(): string
+    public function getFinishDate(): int
     {
         return $this->finishDate;
     }
 
-    public function getExtendedAt(): string | null
+    public function getExtendedAt(): int | null
     {
         return $this->extendedAt;
     }
@@ -143,7 +143,7 @@ class Loan
         $this->finishDate = DateHandler::daysFromNow(15);
     }
 
-    public function getReturnedAt(): string | null
+    public function getReturnedAt(): int | null
     {
         return $this->returnedAt;
     }

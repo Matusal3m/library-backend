@@ -120,8 +120,8 @@ class DatabaseSeeder
                 $loan = [
                     'student_id'  => $studentId,
                     'book_id'     => $bookId,
-                    'started_at'  => $this->faker->dateTimeBetween('-1 month')->format('d-m-Y H:i'),
-                    'finish_date' => $this->faker->dateTimeBetween('now', '+1 month')->format('d-m-Y H:i'),
+                    'started_at'  => $this->faker->dateTimeBetween('-1 month')->getTimestamp(),
+                    'finish_date' => $this->faker->dateTimeBetween('now', '+1 month')->getTimestamp(),
                     'is_active'   => $this->faker->boolean(80),
                 ];
 

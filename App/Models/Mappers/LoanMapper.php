@@ -4,6 +4,7 @@ namespace App\Models\Mappers;
 use App\Models\DAOs\BookDAO;
 use App\Models\DAOs\StudentDAO;
 use App\Models\Entities\Loan;
+use App\Util\DateHandler;
 
 class LoanMapper
 {
@@ -56,4 +57,22 @@ class LoanMapper
         ];
     }
 
+    public function mapLoanToReadableArray(Loan $loan): array
+    {
+        $extended_at = $loan->getExtendedAt() ? DateHandler::timestampToReadable($loan->getExtendedAt()) : null;
+        $returned_at = $loan->getReturnedAt() ? DateHandler::timestampToReadable($loan->getReturnedAt()) : null;
+
+        return [
+            'id'               => $loan->getId(),
+            'student_id'       => $loan->getStudent()->getId(),
+            'book_id'          => $loan->getBook()->getId(),
+            'started_at'       => DateHandler::timestampToReadable($loan->getStartedAt()),
+            'extended_at'      => $extended_at,
+            'finish_date'      => DateHandler::timestampToReadable($loan->getFinishDate()),
+            'returned_at'      => $returned_at,
+            'is_active'        => $loan->getIsActive(),
+            'is_late'          => $loan->getIsLate(),
+            'returned_on_time' => $loan->getReturnedOnTime(),
+        ];
+    }
 }
