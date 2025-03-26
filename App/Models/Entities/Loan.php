@@ -19,6 +19,12 @@ class Loan
 
     private string|null $extendedAt = null;
 
+    private string|null $returnedAt = null;
+
+    private bool|null $isLate = null;
+
+    private bool|null $returnedOnTime = null;
+
     private bool $isActive;
 
     public function __construct(Student $student, Book $book)
@@ -127,4 +133,37 @@ class Loan
         $this->finishDate = DateHandler::daysFromNow(15);
     }
 
+    public function getReturnedAtAt(): string | null
+    {
+        return $this->returnedAt;
+    }
+
+    public function getReturnedOnTime(): bool | null
+    {
+        return $this->returnedOnTime;
+    }
+
+    public function getIsLate(): bool | null
+    {
+        return $this->isLate;
+    }
+
+    private function checkIfIsLate($finishDate, $isActive): bool | null
+    {
+        if (! $isActive) {
+            return null;
+        }
+
+        $now = DateHandler::dateNow();
+        return DateHandler::isGreater($now, $finishDate);
+    }
+
+    private function checkIfWasReturnedOnTime($returnedAt, $finishDate): bool | null
+    {
+        if (! $returnedAt) {
+            return null;
+        }
+
+        return DateHandler::isGreater($finishDate, $returnedAt);
+    }
 }
