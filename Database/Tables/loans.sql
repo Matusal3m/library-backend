@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS loans (
     is_active BOOLEAN NOT NULL,
     FOREIGN KEY (student_id) REFERENCES students(id),
     FOREIGN KEY (book_id) REFERENCES books(id)
-);         
+);

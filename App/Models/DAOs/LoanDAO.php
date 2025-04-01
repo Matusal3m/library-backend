@@ -73,6 +73,29 @@ class LoanDAO
         );
     }
 
+    public function getJoinedLoansByClassRoom(
+        string $classRoom,
+        string $order = 'ASC',
+        string $referenceToOrder = 'loans.started_at'
+    ): array {
+        $query = "SELECT
+            students.name,
+            books.title,
+            students.class_room,
+            loans.started_at,
+            loans.extended_at,
+            loans.finish_date,
+            loans.returned_at
+        FROM loans
+        INNER JOIN students ON loans.student_id = students.id
+        INNER JOIN books ON loans.book_id = books.id $order $referenceToOrder
+        WHERE loans.class_room = $classRoom";
+
+        $result = $this->db->query($query);
+
+        return $result;
+    }
+
     public function update(Loan $loan): void
     {
         $id          = $loan->getId();
